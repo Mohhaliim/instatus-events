@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { getRandomGradient } from '@/utils/getRandomGradient';
 
 type RowType = {
   id: string;
@@ -23,10 +24,11 @@ type RowType = {
   };
 };
 
-//format the data to this "Aug 7, 5:38 PM"
 export default function StatusRow({ row }: { row: RowType }) {
   const [visible, setVisible] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
+  const firstLetter = row.actor_name.charAt(0).toUpperCase();
+  const backgroundColor = getRandomGradient(firstLetter);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -42,12 +44,13 @@ export default function StatusRow({ row }: { row: RowType }) {
     };
   }, []);
 
+  //format the data to this "Aug 7, 5:38 PM"
   return (
     <div className="relative">
       <div className="w-full grow grid grid-cols-3 text-gray-800 text-sm leading-[17px] hover:bg-gray-300 h-[54px] px-6">
         <div className="flex gap-2 items-center">
-          <div className="w-[25px] aspect-square rounded-full text-white bg-red-500 flex items-center justify-center">
-            {row.actor_name[0]}
+          <div style={{ background: backgroundColor }} className="w-[25px] aspect-square rounded-full text-white bg-red-500 flex items-center justify-center">
+            {firstLetter}
           </div>
           <div>{row.target_name}</div>
         </div>
@@ -135,7 +138,6 @@ export default function StatusRow({ row }: { row: RowType }) {
             </div>
           </div>
         </div>
-        <div></div>
       </div>
     </div>
   );

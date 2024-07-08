@@ -29,7 +29,6 @@ export default function Home() {
     },
   }
 
-
   return (
     <div className="flex min-h-screen justify-center">
       <div className="max-w-[1440px] mt-20 w-full justify-center flex">
