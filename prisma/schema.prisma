@@ -1,0 +1,23 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+//from vercl postgres docs
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Event {
+  id          String   @id
+  actorId     String
+  actorName   String
+  group       String
+  action      String
+  targetId    String
+  targetName  String
+  location    String
+  occurredAt  DateTime @default(now())
+  metadata    Json
+}
