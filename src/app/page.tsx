@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useEvents } from './hooks/useEvents';
 import Loading from './components/Loading/Loading';
@@ -8,6 +8,7 @@ import StatusRow from './components/StatusRow/StatusRow';
 
 export default function Home() {
   const [live, setLive] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
 
   const {
     events,
@@ -19,11 +20,26 @@ export default function Home() {
     isReachingEnd,
   } = useEvents(10);
 
+  const [filteredEvents, setFilteredEvents] = useState(events || []);
+
   const loadMore = () => {
     if (!isReachingEnd) {
       setSize(size + 1);
     }
   };
+
+  useEffect(() => {
+    if (!search) {
+      setFilteredEvents(events);
+    } else {
+      const filtered = events?.filter(event =>
+        event.actor_name.toLowerCase().includes(search.toLowerCase()) ||
+        event.target_name.toLowerCase().includes(search.toLowerCase()) ||
+        event.action.name.toLowerCase().includes(search.toLowerCase())
+      );
+      setFilteredEvents(filtered);
+    }
+  }, [search, events]);
 
   return (
     <div className="flex min-h-screen justify-center">
@@ -34,6 +50,7 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Search name, email or action..."
+                onChange={e => setSearch(e.target.value)}
                 className="flex grow bg-gray-100 focus-visible:outline-none"
               />
               <div className="flex font-normal text-xs text-gray-500">
@@ -84,7 +101,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex w-full flex-col">
-            {events?.map((event, index) => (
+            {filteredEvents?.map((event, index) => (
               <StatusRow row={event} key={index} />
             ))}
           </div>

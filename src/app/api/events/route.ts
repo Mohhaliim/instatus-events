@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
       skip: (Number(page)- 1) * Number(limit),
       take: Number(limit),
       orderBy: {
-        actor_name: "asc",
+        occurred_at: "asc",
       }
     })
 

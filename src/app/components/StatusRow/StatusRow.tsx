@@ -44,19 +44,39 @@ export default function StatusRow({ row }: { row: RowType }) {
     };
   }, []);
 
-  //format the data to this "Aug 7, 5:38 PM"
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+
+    return date
+      .toLocaleDateString('en-US', options)
+      .replace(/(\w+) (\d+),/, '$1 $2,')
+      .replace(/(\d+:\d+)\s(am|pm)/, '$1 $2');
+  };
+
+  const formatedDate = formatDate(row.occurred_at);
+
   return (
     <div className="relative">
       <div className="w-full grow grid grid-cols-3 text-gray-800 text-sm leading-[17px] hover:bg-gray-300 h-[54px] px-6">
         <div className="flex gap-2 items-center">
-          <div style={{ background: backgroundColor }} className="w-[25px] aspect-square rounded-full text-white bg-red-500 flex items-center justify-center">
+          <div
+            style={{ background: backgroundColor }}
+            className="w-[25px] aspect-square rounded-full text-white bg-red-500 flex items-center justify-center"
+          >
             {firstLetter}
           </div>
-          <div>{row.target_name}</div>
+          <div>{row.actor_name}</div>
         </div>
         <div className="flex items-center">{row.action.name}</div>
         <div className="flex items-center justify-between">
-          <div>{row.occurred_at}</div>{' '}
+          <div>{formatedDate}</div>
           <button
             className="w-[8.67px] h-[13.59px]"
             onClick={() => setVisible(!visible)}
@@ -112,7 +132,7 @@ export default function StatusRow({ row }: { row: RowType }) {
               <div className="flex flex-col gap-2">
                 <div className="flex font-normal">
                   <div className="text-gray-400 w-[90px]">Readable</div>
-                  <div className="text-black">{row.occurred_at}</div>
+                  <div className="text-black">{formatedDate}</div>
                 </div>
               </div>
             </div>
