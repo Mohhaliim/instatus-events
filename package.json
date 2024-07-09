@@ -10,12 +10,13 @@
     "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
-    "instalog": "file:./instalog",
     "@prisma/client": "^5.16.1",
+    "instalog": "file:./instalog",
     "next": "14.2.4",
     "prisma": "^5.16.1",
     "react": "^18",
     "react-dom": "^18",
+    "short-unique-id": "^5.2.0",
     "swr": "^2.2.5"
   },
   "devDependencies": {

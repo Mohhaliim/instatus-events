@@ -2,36 +2,32 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { useEvents } from './hooks/useEvents';
+import Loading from './components/Loading/Loading';
 import StatusRow from './components/StatusRow/StatusRow';
 
 export default function Home() {
   const [live, setLive] = useState<boolean>(false);
 
-  const row = {
-    "id": "evt_15B56WILKW5K",
-    "object": "event",
-    "actor_id": "user_3VG74289PUA2",
-    "actor_name": "Ali Salah",
-    "group": "instatus.com",
-    "action": {
-      "id": "evt_action_PGTD81NCAOQ2",
-      "object": "event_action",
-      "name": "user.login_succeeded"
-    },
-    "target_id": "user_DOKVD1U3L030",
-    "target_name": "ali@instatus.com",
-    "location": "105.40.62.95",
-    "occurred_at": "2022-01-05T14:31:13.607Z",
-    "metadata": {
-      "redirect": "/setup",
-      "description": "User login succeeded.",
-      "x_request_id": "req_W1Y13QOHMI5H"
-    },
-  }
+  const {
+    events,
+    isLoading,
+    isError,
+    isValidating,
+    size,
+    setSize,
+    isReachingEnd,
+  } = useEvents(10);
+
+  const loadMore = () => {
+    if (!isReachingEnd) {
+      setSize(size + 1);
+    }
+  };
 
   return (
     <div className="flex min-h-screen justify-center">
-      <div className="max-w-[1440px] mt-20 w-full justify-center flex">
+      <div className="max-w-[1440px] my-20 w-full justify-center flex">
         <div className="flex flex-col w-[90%] h-fit rounded-[15px] border border-gray-100">
           <div className="flex flex-col w-full bg-gray-100 p-6 gap-5 rounded-t-[15px]">
             <div className="flex w-full border border-gray-border rounded-lg h-11 pl-4">
@@ -88,15 +84,23 @@ export default function Home() {
             </div>
           </div>
           <div className="flex w-full flex-col">
-            <StatusRow row={row} />
-            <StatusRow row={row} />
-            <StatusRow row={row} />
-            <StatusRow row={row} />
-            <StatusRow row={row} />
+            {events?.map((event, index) => (
+              <StatusRow row={event} key={index} />
+            ))}
           </div>
-          <div className="flex justify-center w-full bg-gray-100 rounded-b-[15px] p-6">
-            <button className="text-gray-500 font-bold text-sm leading-[17px]">
-              LOAD MORE
+          <div className="flex justify-center w-full bg-gray-100 rounded-b-[15px]">
+            <button
+              onClick={loadMore}
+              className="text-gray-500 font-bold text-sm leading-[17px] p-6 w-full"
+              disabled={isReachingEnd}
+            >
+              {isValidating ? (
+                <Loading color={"bg-gray-500"} />
+              ) : isReachingEnd ? (
+                'No more events'
+              ) : (
+                'Load more'
+              )}
             </button>
           </div>
         </div>

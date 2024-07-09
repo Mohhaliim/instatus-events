@@ -29,6 +29,12 @@ type ListEventsParams = {
   limit?: number;
 }
 
+type getResponse = {
+  status: number;
+  events?: EventObject[];
+  message? : string;
+}
+
 class InstaLog {
   private api: AxiosInstance;
 
@@ -47,8 +53,8 @@ class InstaLog {
     return response.data;
   }
 
-  async listEvents(params: ListEventsParams): Promise<EventObject[]> {
-    const response = await this.api.get<EventObject[]>('/api/events', { params });
+  async listEvents(params: ListEventsParams): Promise<getResponse> {
+    const response = await this.api.get<getResponse>('/api/events', { params });
     return response.data;
   }
 }
