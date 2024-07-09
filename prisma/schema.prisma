@@ -10,14 +10,15 @@ datasource db {
 }
 
 model Event {
-  id          String   @id
-  actorId     String
-  actorName   String
-  group       String
-  action      String
-  targetId    String
-  targetName  String
-  location    String
-  occurredAt  DateTime @default(now())
-  metadata    Json
+  id            String   @id
+  object        String
+  actor_id      String
+  actor_name    String
+  group         String
+  action        Json
+  target_id     String
+  target_name   String
+  location      String
+  occurred_at   DateTime @default(now())
+  metadata      Json
 }

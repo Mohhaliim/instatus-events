@@ -1,0 +1,56 @@
+import axios, { AxiosInstance } from 'axios';
+
+type EventObject = {
+  id: string;
+  object: string;
+  actor_id: string;
+  actor_name: string;
+  group: string;
+  action: {
+    id: string;
+    object: string;
+    name: string;
+  };
+  target_id: string;
+  target_name: string;
+  location: string;
+  occurred_at: string;
+  metadata: {
+    [key: string]: string;
+  };
+}
+
+type ListEventsParams = {
+  actor_id?: string;
+  target_id?: string;
+  action_id?: string;
+  action_name?: string;
+  page?: number;
+  limit?: number;
+}
+
+class InstaLog {
+  private api: AxiosInstance;
+
+  constructor(private secretKey: string, private baseURL: string) {
+    this.api = axios.create({
+      baseURL: this.baseURL,
+      headers: {
+        Authorization: `Bearer ${this.secretKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
+  async createEvent(event: EventObject): Promise<EventObject> {
+    const response = await this.api.post<EventObject>('/api/events', event);
+    return response.data;
+  }
+
+  async listEvents(params: ListEventsParams): Promise<EventObject[]> {
+    const response = await this.api.get<EventObject[]>('/api/events', { params });
+    return response.data;
+  }
+}
+
+export default InstaLog;
