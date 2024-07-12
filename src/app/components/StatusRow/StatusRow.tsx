@@ -87,10 +87,11 @@ export default function StatusRow({ row }: { row: RowType }) {
       </div>
       <div
         ref={ref}
-        className={`w-[102%] shadow absolute h-auto rounded-xl border bg-white border-gray-100 z-10 px-10 py-6 -left-[1%] top-0 flex-col ${
+        className={`w-[102%] absolute h-auto -left-[1%] ${
           visible ? 'flex' : 'hidden'
         }`}
       >
+        <div className='shadow w-full rounded-xl border bg-white border-gray-100 z-10 px-10 py-6 top-0 flex-col mb-14'>
         <div className="flex flex-col w-full gap-10">
           <div className="grid grid-cols-3 text-sm leading-[17px]">
             <div className="flex flex-col gap-4">
@@ -157,6 +158,7 @@ export default function StatusRow({ row }: { row: RowType }) {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>

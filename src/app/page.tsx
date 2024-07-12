@@ -7,6 +7,7 @@ import StatusRow from './components/StatusRow/StatusRow';
 
 import { useEvents } from './hooks/useEvents';
 import { downloadCSV } from '@/utils/csvGenerate';
+import SkeletonRow from './components/SkeletonRow/SkeletonRow';
 
 export default function Home() {
   const [live, setLive] = useState<boolean>(false);
@@ -34,10 +35,11 @@ export default function Home() {
     if (!search) {
       setFilteredEvents(events);
     } else {
-      const filtered = events?.filter(event =>
-        event.actor_name.toLowerCase().includes(search.toLowerCase()) ||
-        event.target_name.toLowerCase().includes(search.toLowerCase()) ||
-        event.action.name.toLowerCase().includes(search.toLowerCase())
+      const filtered = events?.filter(
+        (event) =>
+          event.actor_name.toLowerCase().includes(search.toLowerCase()) ||
+          event.target_name.toLowerCase().includes(search.toLowerCase()) ||
+          event.action.name.toLowerCase().includes(search.toLowerCase())
       );
       setFilteredEvents(filtered);
     }
@@ -52,7 +54,7 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Search name, email or action..."
-                onChange={e => setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
                 className="flex grow bg-gray-100 focus-visible:outline-none"
               />
               <div className="flex font-normal text-xs text-gray-500">
@@ -70,7 +72,10 @@ export default function Home() {
                   <div>Filter</div>
                 </button>
                 <div className="w-px h-full bg-gray-border" />
-                <button className="flex gap-1 px-4 items-center" onClick={() => downloadCSV(filteredEvents)}>
+                <button
+                  className="flex gap-1 px-4 items-center"
+                  onClick={() => downloadCSV(filteredEvents)}
+                >
                   <div className="w-[15px] h-auto relative bottom-[3px]">
                     <Image
                       src={'/export.svg'}
@@ -106,6 +111,13 @@ export default function Home() {
             {filteredEvents?.map((event, index) => (
               <StatusRow row={event} key={index} />
             ))}
+            {(isLoading || isValidating) && (
+              <>
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+              </>
+            )}
           </div>
           <div className="flex justify-center w-full bg-gray-100 rounded-b-[15px]">
             <button
@@ -114,7 +126,7 @@ export default function Home() {
               disabled={isReachingEnd}
             >
               {isValidating ? (
-                <Loading color={"bg-gray-500"} />
+                <Loading color={'bg-gray-500'} />
               ) : isReachingEnd ? (
                 'No more events'
               ) : (
