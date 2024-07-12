@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { getRandomGradient } from '@/utils/getRandomGradient';
 
 type RowType = {
-  id: string;
+  id?: string;
   object: string;
   actor_id: string;
   actor_name: string;
@@ -17,8 +17,8 @@ type RowType = {
   };
   target_id: string;
   target_name: string;
-  location: string;
-  occurred_at: string;
+  location?: string;
+  occurred_at?: string;
   metadata: {
     [key: string]: string;
   };
@@ -60,7 +60,7 @@ export default function StatusRow({ row }: { row: RowType }) {
       .replace(/(\d+:\d+)\s(am|pm)/, '$1 $2');
   };
 
-  const formatedDate = formatDate(row.occurred_at);
+  const formatedDate = formatDate(row.occurred_at || '');
 
   return (
     <div className="relative">

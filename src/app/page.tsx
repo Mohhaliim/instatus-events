@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useEvents } from './hooks/useEvents';
 import Loading from './components/Loading/Loading';
 import StatusRow from './components/StatusRow/StatusRow';
+
+import { useEvents } from './hooks/useEvents';
+import { downloadCSV } from '@/utils/csvGenerate';
 
 export default function Home() {
   const [live, setLive] = useState<boolean>(false);
@@ -68,8 +70,8 @@ export default function Home() {
                   <div>Filter</div>
                 </button>
                 <div className="w-px h-full bg-gray-border" />
-                <button className="flex gap-1 px-4 items-center">
-                  <div className="w-[15px] h-auto">
+                <button className="flex gap-1 px-4 items-center" onClick={() => downloadCSV(filteredEvents)}>
+                  <div className="w-[15px] h-auto relative bottom-[3px]">
                     <Image
                       src={'/export.svg'}
                       alt="filter"
