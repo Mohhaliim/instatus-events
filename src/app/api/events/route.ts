@@ -24,8 +24,36 @@ export async function GET(req: NextRequest) {
 }
 
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
+  const clientIp = req.headers.get('x-forwarded-for') || req.ip || 'unknown';
   const uid = new ShortUniqueId({ length: 12 });
-  const uuid = uid.randomUUID();
-  const id = `evt_${uuid}`;
+  const eventID = `evt_${uid.randomUUID()}`;
+  const requestID = `req_${uid.randomUUID()}`;
+  const eventData = await req.json();
+
+  eventData.metadata = {
+    ...eventData.metadata,
+    request_id: requestID
+  }
+
+  try {
+    const event = await prisma.event.create({
+      data: {
+        id: eventID,
+        object: eventData.object,
+        actor_id: eventData.actor_id,
+        actor_name: eventData.actor_name,
+        group: eventData.group,
+        action: eventData.action,
+        target_id: eventData.target_id,
+        target_name: eventData.target_name,
+        location: clientIp,
+        metadata: eventData.metadata
+      }
+    })
+
+    return NextResponse.json({status: 200, event})
+  }catch {
+    return NextResponse.json({status: 500, message: "Internal server error"})
+  }
 }

@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
 type EventObject = {
-  id: string;
+  id?: string;
   object: string;
   actor_id: string;
   actor_name: string;
@@ -13,8 +13,8 @@ type EventObject = {
   };
   target_id: string;
   target_name: string;
-  location: string;
-  occurred_at: string;
+  location?: string;
+  occurred_at?: string;
   metadata: {
     [key: string]: string;
   };
@@ -35,6 +35,12 @@ type getResponse = {
   message? : string;
 }
 
+type postResponse = {
+  status: number;
+  event?: EventObject;
+  message? : string;
+}
+
 class InstaLog {
   private api: AxiosInstance;
 
@@ -48,8 +54,8 @@ class InstaLog {
     });
   }
 
-  async createEvent(event: EventObject): Promise<EventObject> {
-    const response = await this.api.post<EventObject>('/api/events', event);
+  async createEvent(event: EventObject): Promise<postResponse> {
+    const response = await this.api.post<postResponse>('/api/events', event);
     return response.data;
   }
 

@@ -86,7 +86,7 @@ export default function Login() {
                 </div>
                 <button
                   type="submit"
-                  className="relative flex items-center justify-center px-6 py-5 rounded-full w-full max-w-[24rem] font-medium text-white bg-gray-950 hover:bg-gray-950/90 dark:border dark:border-gray-900 dark:bg-gray-900/20 dark:hover:bg-gray-950 dark:hover:border-gray-900"
+                  className="relative flex items-center justify-center px-6 py-5 rounded-full w-full max-w-[24rem] font-medium text-white bg-gray-950 hover:bg-gray-950/90 "
                 >
                   {isLoading ? (
                     <Loading color="bg-white" />
