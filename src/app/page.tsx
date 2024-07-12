@@ -6,13 +6,19 @@ import Loading from './components/Loading/Loading';
 import StatusRow from './components/StatusRow/StatusRow';
 
 import { useEvents } from './hooks/useEvents';
+import useFilters from './hooks/useFilters';
+
 import { downloadCSV } from '@/utils/csvGenerate';
 import SkeletonRow from './components/SkeletonRow/SkeletonRow';
 
 export default function Home() {
   const [live, setLive] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
-
+  const [filtersVisible, setFiltersVisible] = useState<boolean>(false);
+  const [actorFilter, setActorFilter] = useState<string | undefined>();
+  const [targetFilter, setTargetFilter] = useState<string | undefined>();
+  const [actionFilter, setActionFilter] = useState<string | undefined>();
+  const { filters, isFiltersError } = useFilters();
   const {
     events,
     isLoading,
@@ -21,7 +27,7 @@ export default function Home() {
     size,
     setSize,
     isReachingEnd,
-  } = useEvents(10);
+  } = useEvents(10, { actor_id: actorFilter, target_id: targetFilter, action_id: actionFilter });
 
   const [filteredEvents, setFilteredEvents] = useState(events || []);
 
@@ -57,9 +63,9 @@ export default function Home() {
                 onChange={(e) => setSearch(e.target.value)}
                 className="flex grow bg-gray-100 focus-visible:outline-none"
               />
-              <div className="flex font-normal text-xs text-gray-500">
+              <div className="flex relative font-normal text-xs text-gray-500">
                 <div className="w-px h-full bg-gray-border" />
-                <button className="flex gap-1 px-4 items-center">
+                <button onClick={() => setFiltersVisible(!filtersVisible)} className="flex gap-1 px-4 items-center">
                   <div className="w-[15px] h-auto">
                     <Image
                       src={'/filters.svg'}
@@ -71,6 +77,23 @@ export default function Home() {
                   </div>
                   <div>Filter</div>
                 </button>
+                {filtersVisible && !isFiltersError && (
+                  <div className='absolute min-w-40 h-fit bg-white rounded-[15px] border-2 border-gray-100 z-20 top-10 overflow-hidden'>
+                    <div className='flex flex-col text-gray-800 text-sm leading-[17px]'>
+                      {filters.actors?.map(({actor_name, actor_id}: {actor_name: string, actor_id: string}, index: number) => (
+                        <button onClick={() => setActorFilter(actor_id)} key={index} className='py-1 hover:bg-gray-100 px-3 w-full text-start'>{actor_name}</button>
+                      ))}
+                      <div className='h-px w-full bg-gray-100 my-2'/>
+                      {filters.targets?.map(({target_name, target_id}: {target_name: string, target_id: string}, index: number) => (
+                        <button onClick={() => setTargetFilter(target_id)} key={index} className='py-1 hover:bg-gray-100 px-3 w-full text-start'>{target_name}</button>
+                      ))}
+                      <div className='h-px w-full bg-gray-100 my-2'/>
+                      {filters.actions?.map(({name, id}: {name: string, id: string}, index: number) => (
+                        <button onClick={() => setActionFilter(id)} key={index} className='py-1 hover:bg-gray-100 px-3 w-full text-start'>{name}</button>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div className="w-px h-full bg-gray-border" />
                 <button
                   className="flex gap-1 px-4 items-center"

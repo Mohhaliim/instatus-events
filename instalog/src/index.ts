@@ -21,9 +21,9 @@ type EventObject = {
 }
 
 type ListEventsParams = {
-  actor_id?: string;
-  target_id?: string;
-  action_id?: string;
+  actor_id?: string | null;
+  target_id?: string | null;
+  action_id?: string | null;
   action_name?: string;
   page?: number;
   limit?: number;
